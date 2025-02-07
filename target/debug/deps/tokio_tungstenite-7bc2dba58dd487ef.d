@@ -1,0 +1,10 @@
+/home/calc/Documents/Cosmic/target/debug/deps/libtokio_tungstenite-7bc2dba58dd487ef.rmeta: /home/calc/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-tungstenite-0.26.1/src/lib.rs /home/calc/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-tungstenite-0.26.1/src/compat.rs /home/calc/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-tungstenite-0.26.1/src/connect.rs /home/calc/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-tungstenite-0.26.1/src/handshake.rs /home/calc/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-tungstenite-0.26.1/src/stream.rs /home/calc/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-tungstenite-0.26.1/src/tls.rs
+
+/home/calc/Documents/Cosmic/target/debug/deps/tokio_tungstenite-7bc2dba58dd487ef.d: /home/calc/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-tungstenite-0.26.1/src/lib.rs /home/calc/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-tungstenite-0.26.1/src/compat.rs /home/calc/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-tungstenite-0.26.1/src/connect.rs /home/calc/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-tungstenite-0.26.1/src/handshake.rs /home/calc/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-tungstenite-0.26.1/src/stream.rs /home/calc/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-tungstenite-0.26.1/src/tls.rs
+
+/home/calc/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-tungstenite-0.26.1/src/lib.rs:
+/home/calc/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-tungstenite-0.26.1/src/compat.rs:
+/home/calc/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-tungstenite-0.26.1/src/connect.rs:
+/home/calc/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-tungstenite-0.26.1/src/handshake.rs:
+/home/calc/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-tungstenite-0.26.1/src/stream.rs:
+/home/calc/.cargo/registry/src/index.crates.io-6f17d22bba15001f/tokio-tungstenite-0.26.1/src/tls.rs:
