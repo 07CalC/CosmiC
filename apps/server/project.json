@@ -9,7 +9,7 @@
       "executor": "@monodon/rust:build",
       "outputs": ["{options.target-dir}"],
       "options": {
-        "target-dir": "dist/target/server"
+        "target-dir": "packages/server"
       },
       "configurations": {
         "production": {
@@ -22,7 +22,7 @@
       "executor": "@monodon/rust:test",
       "outputs": ["{options.target-dir}"],
       "options": {
-        "target-dir": "dist/target/server"
+        "target-dir": "packages/server"
       },
       "configurations": {
         "production": {
