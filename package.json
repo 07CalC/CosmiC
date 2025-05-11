@@ -2,7 +2,9 @@
   "name": "@cosmi-c/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "dev": "nx run-many --target=serve --projects=server,dashboard --parallel"
+  },
   "private": true,
   "dependencies": {
     "react": "19.0.0",

@@ -25,7 +25,17 @@
         }
       }
     },
-    "@monodon/rust",
+    {
+      "plugin": "@monodon/rust",
+      "options": {
+        "buildTargetName": "build",
+        "testTargetName": "test",
+        "devTargetName": "run",
+        "typecheckTargetName": "typecheck",
+        "buildDepsTargetName": "build-deps",
+        "watchDepsTargetName": "watch-deps"
+      }
+    },
     {
       "plugin": "@nx/react/router-plugin",
       "options": {
