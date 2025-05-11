@@ -2,7 +2,7 @@
 [workspace]
 resolver = '2'
 members = [
-	'packages/server',
+	'apps/server',
 ]
 
 [profile.release]
