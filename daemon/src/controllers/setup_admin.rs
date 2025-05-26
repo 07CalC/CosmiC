@@ -1,5 +1,9 @@
-use crate::{extra::hash_password::hash_password, state::AppState, utils::types::User};
-use axum::{extract::State, response::{IntoResponse, Response}, Json};
+use crate::{extra::hash_password::hash_password, state::AppState};
+use axum::{
+    Json,
+    extract::State,
+    response::{IntoResponse},
+};
 use serde::Deserialize;
 use serde_json::json;
 use sqlx::{query, query_scalar};
@@ -15,7 +19,7 @@ pub struct SetupRequest {
 pub async fn setup_admin(
     State(state): State<AppState>,
     Json(payload): Json<SetupRequest>,
-) -> Result<impl IntoResponse, (axum::http::StatusCode, Json<serde_json::Value>)>  {
+) -> Result<impl IntoResponse, (axum::http::StatusCode, Json<serde_json::Value>)> {
     let count: i64 = query_scalar("SELECT COUNT(*) FROM users")
         .fetch_one(&state.db)
         .await
@@ -44,7 +48,7 @@ pub async fn setup_admin(
             Json(json!({
                 "message": "required fields missing",
                 "error": "required fields missing"
-            }))
+            })),
         ));
     }
 
@@ -65,8 +69,5 @@ pub async fn setup_admin(
 .execute(&state.db)
 .await;
 
-
-    Ok(Json(
-        json!({"message": "Admin setup completed"}),
-    ))
+    Ok(Json(json!({"message": "Admin setup completed"})))
 }
