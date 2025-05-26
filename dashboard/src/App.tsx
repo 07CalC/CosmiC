@@ -1,6 +1,6 @@
 import { Navigate, Route, BrowserRouter as Router, Routes } from "react-router-dom"
 import './global.css'
-import { GlobalProvider, useGlobal } from "./context/GlobalContext"
+import { useGlobal } from "./context/GlobalContext"
 import { Home } from "./pages/Home"
 import { useSetup } from "./context/SetupContext";
 import Loading from "./components/Loading";

@@ -31,7 +31,8 @@ export const Sidebar = () => {
         <img 
           src='/cosmicLogo.png'
           alt='Logo'
-          className="w-16 h-16"
+          
+          className="w-12 h-16 object-center"
         />
         <AnimatedLogo />
       </div>

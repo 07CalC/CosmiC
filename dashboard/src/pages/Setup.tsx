@@ -1,11 +1,6 @@
-import React, { useState } from 'react';
+
 
 export const Setup: React.FC = () => {
-    const [formData, setFormData] = useState({
-        email: '',
-        username: '',
-        password: '',
-    });
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();

@@ -8,8 +8,6 @@ export const AnimatedLogo = () => {
     const animate = async () => {
       if (isAnimating) return;
       setIsAnimating(true);
-
-      const fullText = 'CosmiC';
       const textWithoutLastC = 'Cosmi';
 
       await new Promise(resolve => setTimeout(resolve, 2000));

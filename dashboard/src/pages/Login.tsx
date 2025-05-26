@@ -1,16 +1,14 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/authContext';
 
 export const Login = () => {
-    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         username: '',
         password: ''
     });
     const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
-    const { user, setUser } = useAuth();
+    const { setUser } = useAuth();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { id, value } = e.target;
@@ -48,7 +46,6 @@ export const Login = () => {
             setIsLoading(false);
         }
     };
-    console.log('User:', user);
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-[#0D1117]">
             <h1 className="text-2xl font-bold text-[#C9D1D9] mb-4">Login</h1>

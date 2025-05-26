@@ -1,8 +1,8 @@
 use axum::{Router, routing::get};
-use routes::auth::auth_routes;
+use routes::{auth::auth_routes, ws::ws_routes};
 use state::AppState;
 use std::net::SocketAddr;
-use tower_http::{cors::{Any, CorsLayer}};
+use tower_http::{cors::{Any, CorsLayer}, services::ServeDir};
 use tracing_subscriber::EnvFilter;
 mod controllers;
 mod extra;
@@ -10,6 +10,7 @@ mod routes;
 mod state;
 mod utils;
 mod middlewares;
+mod ws;
 
 #[tokio::main]
 async fn main() {
@@ -29,9 +30,13 @@ async fn main() {
     .allow_methods(Any)
     .allow_headers(Any);
 
+    let static_files = ServeDir::new("./dashboard");
+
     let app = Router::new()
+        .fallback_service(static_files)
         .route("/health", get(|| async { "Http server working fine" }))
         .nest("/api/auth", auth_routes())
+        .nest("/api/ws", ws_routes())
         .with_state(state.unwrap())
         .layer(cors_layer);
 
