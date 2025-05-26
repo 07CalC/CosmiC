@@ -9,6 +9,7 @@ import { Login } from "./pages/Login";
 import { useAuth } from "./context/authContext";
 import { ToastContainer } from "react-toastify";
 import { Layout } from "./Layout";
+import TerminalPage from "./pages/Terminal";
 
 function App() {
   
@@ -42,7 +43,7 @@ function App() {
             <Route path="/settings" element={<div>Settings Page</div>} />
             <Route path="/deployments" element={<div>Deployments Page</div>} />
             <Route path="/logs" element={<div>Logs Page</div>} />
-            <Route path="/terminal" element={<div>Terminals Page</div>} />
+            {/* <Route path="/terminal" element={<TerminalPage />} /> */}
             <Route path="/users" element={<div>Users Page</div>} />
             <Route path="/settings" element={<div>Settings Page</div>} />
             <Route path="/login" element={<Navigate to="/" />} />

@@ -39,6 +39,7 @@ export const Home = () => {
 
         return () => {
             if (wsRef.current) {
+                console.log("Closing WebSocket connection");
                 wsRef.current.close();
                 wsRef.current = null;
             }

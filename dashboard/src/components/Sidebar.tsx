@@ -5,11 +5,12 @@ import { VscGithubProject } from "react-icons/vsc";
 import { FaDatabase } from "react-icons/fa";
 import { FaRocket } from "react-icons/fa";
 import { FaScroll } from "react-icons/fa";
-import { IoTerminal } from "react-icons/io5";
+import { MdOutlineLogout } from "react-icons/md";
 import { FaUsers } from "react-icons/fa";
 import { IoMdSettings } from "react-icons/io";
 import { useAuth } from '../context/authContext';
 import { FaUser } from "react-icons/fa";
+import { appVersion } from '../contants/appDetails';
 
 const routes = [
   { path: '/', label: 'Dashboard', icon: <MdDashboard className="text-2xl" /> },
@@ -17,24 +18,28 @@ const routes = [
   { path: '/databases', label: 'Databases', icon: <FaDatabase className="text-2xl" /> },
   { path: '/deployments', label: 'Deployments', icon: <FaRocket className='text-2xl' /> },
   { path: '/logs', label: 'Logs', icon: <FaScroll className='text-2xl' /> },
-  { path: '/terminal', label: 'Terminal', icon: <IoTerminal className='text-2xl' /> },
+  // { path: '/terminal', label: 'Terminal', icon: <IoTerminal className='text-2xl' /> },
   { path: '/users', label: 'Users', icon: <FaUsers className='text-2xl' /> },
   { path: '/settings', label: 'Settings', icon: <IoMdSettings className='text-2xl' /> },
 ];
 
 export const Sidebar = () => {
   const location = useLocation();
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   return (
     <div className="h-screen w-64 bg-[#161B22] border-r border-[#30363D] fixed left-0 top-0">
-      <div className="p-4 border-b border-[#30363D] flex gap-x-5 items-center">
-        <img 
-          src='/cosmicLogo.png'
-          alt='Logo'
-          
-          className="w-12 h-16 object-center"
-        />
-        <AnimatedLogo />
+      <div className="flex flex-col border-b border-[#30363D]">
+        <div className="p-4 flex items-center ">
+          <img 
+            src='/cosmicLogo.png'
+            alt='Logo'
+            className="w-12 h-16 object-center"
+          />
+          <div className="flex flex-col items-center justify-center">
+          <AnimatedLogo />
+        <p className="text-[#8B949E] text-xs pb-2 px-4">Version {appVersion}</p>
+        </div>
+        </div>
       </div>
       <nav className="p-4">
         {routes.map((route) => (
@@ -52,9 +57,13 @@ export const Sidebar = () => {
           </Link>
         ))}
       </nav>
-      <div className="absolute bottom-0 left-0 w-full p-4 flex gap-x-5 border-t items-center border-[#30363D]">
+      <div className="absolute bottom-0 left-0 w-full justify-between p-4 flex gap-x-5 border-t items-center border-[#30363D]">
           <FaUser className="text-2xl text-[#C9D1D9]" />
           <span className="text-[#C9D1D9] text-2xl">{user?.username || 'Guest'}</span>
+          <MdOutlineLogout
+            className="text-2xl right-0 text-[#C9D1D9] cursor-pointer hover:text-red-500"
+            onClick={logout}
+          />
         </div>
 
     </div>

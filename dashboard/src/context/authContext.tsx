@@ -29,7 +29,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const { setGlobalLoading } = useGlobal();
 
   const fetchUser = async () => {
-    
     try {
       setGlobalLoading(true);
       const res = await fetch("/api/auth/me", {
@@ -60,8 +59,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
 
-  const logout = () => {
-    setUser(null);
+  const logout = async () => {
+    const res = await fetch("/api/auth/logout", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+    const data = await res.json();
+    if(data.success){
+      toast.success("Logged out successfully");
+      setUser(null);
+    }
   };
 
   return (
