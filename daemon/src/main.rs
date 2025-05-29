@@ -1,5 +1,5 @@
 use axum::{Router, routing::get};
-use routes::{auth::auth_routes, ws::ws_routes};
+use routes::{auth::auth_routes, users::users_routes, ws::ws_routes};
 use state::AppState;
 use std::net::SocketAddr;
 use tower_http::{cors::{Any, CorsLayer}, services::ServeDir};
@@ -15,7 +15,7 @@ mod ws;
 #[tokio::main]
 async fn main() {
 
-    let state = AppState::new("sqlite:///var/lib/cosmic/cosmic.db").await;
+    let state = AppState::new("sqlite:///var/lib/cosmic/cosmic.db").await.unwrap();
 
     tracing_subscriber::fmt()
     .with_env_filter(
@@ -35,9 +35,10 @@ async fn main() {
     let app = Router::new()
         .fallback_service(static_files)
         .route("/health", get(|| async { "Http server working fine" }))
-        .nest("/api/auth", auth_routes())
-        .nest("/api/ws", ws_routes())
-        .with_state(state.unwrap())
+        .nest("/api/auth", auth_routes(state.clone()))
+        .nest("/api/ws", ws_routes(state.clone()))
+        .nest("/api/users", users_routes(state.clone()))
+        .with_state(state)
         .layer(cors_layer);
 
     let addr = SocketAddr::from(([0, 0, 0, 0], 4269));

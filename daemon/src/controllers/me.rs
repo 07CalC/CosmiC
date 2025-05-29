@@ -7,37 +7,21 @@ use axum::{
 use sqlx::{query, Row};
 use serde_json::json;
 
-use crate::state::AppState;
+use crate::{state::AppState, utils::types::User};
 
 #[axum::debug_handler]
 pub async fn me(
-    State(state): State<AppState>,
-    Extension(user_id): Extension<String>,
+    State(_state): State<AppState>,
+    Extension(user): Extension<User>,
 ) -> impl IntoResponse {
-    match query("SELECT id, username, email, is_admin FROM users WHERE id = $1")
-        .bind(&user_id)
-        .fetch_one(&state.db)
-        .await
-    {
-        Ok(row) => {
-            Ok(Json(json!({
-                "success": true,
-                "user": {
-                "id": row.get::<String, _>("id"),
-                "username": row.get::<String, _>("username"),
-                "email": row.get::<String, _>("email"),
-                "isAdmin": row.get::<bool, _>("is_admin"),
-                }
-            })))
+    Json(json!({
+        "success": true,
+        "user": {
+            "id": user.id,
+            "username": user.username,
+            "email": user.email,
+            "isAdmin": user.is_admin,
+            "role": user.role,
         }
-        Err(_) => {
-            Err((
-                StatusCode::NOT_FOUND,
-                Json(json!({
-                    "success": false,
-                    "error": "user not found"
-                }))
-            ))
-        }
-    }
+    })).into_response()
 }

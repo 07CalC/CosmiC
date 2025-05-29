@@ -42,7 +42,6 @@ export const Home = () => {
   const [loading, setLoading] = useState(true);
   const wsRef = useRef<WebSocket | null>(null);
   const [stats, setStats] = useState<SystemStats[]>([]);
-  console.log(stats);
 
   useEffect(() => {
     if (!wsRef.current) {
@@ -397,7 +396,7 @@ export const Home = () => {
                         : "text-[#1F6FEB]"
                     }`}
                   >
-                    {stats[stats.length - 1].cpuTemperature !==-1 ?  stats[stats.length - 1].cpuTemperature.toFixed(1): "N/A"}°C
+                    {stats[stats.length - 1].cpuTemperature !==-1 ?  stats[stats.length - 1].cpuTemperature.toFixed(1)+"°C": "N/A"}
                   </p>
                 </div>
                 <div

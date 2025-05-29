@@ -26,7 +26,7 @@ pub async fn login(
     State(state): State<AppState>,
     Json(payload): Json<LoginRequest>,
 ) -> Result<Response, (StatusCode, Json<serde_json::Value>)> {
-    let result = query("SELECT username, id, email, is_admin, password_hash FROM users WHERE username = $1")
+    let result = query("SELECT username, id, email, is_admin, password_hash, role FROM users WHERE username = $1")
         .bind(&payload.username)
         .fetch_one(&state.db)
         .await;
@@ -72,6 +72,7 @@ pub async fn login(
                     "id": row.get::<String, _>("id"),
                     "username": username,
                     "email": row.get::<String, _>("email"),
+                    "role": row.get::<String, _>("role"),
                     "isAdmin": row.get::<bool, _>("is_admin"),
                     }
                 

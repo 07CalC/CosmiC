@@ -79,16 +79,33 @@ pub async fn setup_admin(
 
     let user_id = uuid::Uuid::new_v4().to_string();
 
-    let _ = query("INSERT INTO users (id, username, email, password_hash, is_admin, created_at, updated_at) VALUES (?,?,?,?,?,?,?)"
+    let db_result  = query("INSERT INTO users (id, username, email, password_hash, is_admin, role, created_at, updated_at) VALUES (?,?,?,?,?,?,?,?)"
 ).bind(user_id.clone())
 .bind(payload.username.clone())
 .bind(payload.email.clone())
 .bind(hashed_password.clone())
 .bind(1)
+.bind("owner")
 .bind(now.clone().to_string())
 .bind(now.clone().to_string())
 .execute(&state.db)
 .await;
+
+ match db_result {
+        Ok(_) => (),
+        Err(error) => {
+            println!("Error creating admin user: {:?}", error);
+            return Err((
+                axum::http::StatusCode::INTERNAL_SERVER_ERROR,
+                Json(json!({
+                    "success": false,
+                    "error": "failed to create admin user"
+                })),
+            ));
+        }
+    }
+
+    println!("Admin user created with ID: {}", user_id);
 
     Ok(Json(json!({"success": true, "message": "Admin setup completed"})))
 }

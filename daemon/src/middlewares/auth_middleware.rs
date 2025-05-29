@@ -1,17 +1,20 @@
+use axum::extract::State;
 use axum::{body::Body, extract::Request, http, middleware::Next, response::Response};
 use axum::http::StatusCode;
 use serde_json::json;
+use sqlx::{query, Row};
 
+use crate::state::AppState;
 use crate::utils::decode_jwt::decode_jwt;
+use crate::utils::types::User;
 
-#[derive(Debug)]
-struct AuthError {
-    message: String,
-    status_code: StatusCode,
-}
 
 #[axum::debug_middleware]
-pub async fn auth_middleware(mut req: Request, next: Next) -> Response {
+pub async fn auth_middleware(
+    State(state): State<AppState>,
+    mut req: Request,
+    next: Next) -> Response {
+
     let token = req.headers()
         .get(http::header::COOKIE)
         .and_then(|cookie_header| cookie_header.to_str().ok())
@@ -21,20 +24,35 @@ pub async fn auth_middleware(mut req: Request, next: Next) -> Response {
                 .find(|cookie| cookie.trim().starts_with("token="))
                 .map(|cookie| cookie.trim()[6..].to_string())
         });
-
+    //    println!("{:?}", state);
     match token {
         Some(token) => {
             match decode_jwt(&token, "cosmic_secret") {
                 Ok(user_id) => {
-                    req.extensions_mut().insert(user_id.clone());
+                    let row = query("SELECT id, email, username, is_admin, role FROM users WHERE id = $1")
+                        .bind(&user_id)
+                        .fetch_one(&state.db)
+                        .await
+                        .unwrap();
+                    let user = User {
+                        id: row.get("id"),
+                        username: row.get("username"),
+                        email: row.get("email"),
+                        is_admin: row.get("is_admin"),
+                        role: row.get("role"),
+                        password_hash: None,
+                        created_at: None,
+                        updated_at: None,
+                    };
+                    req.extensions_mut().insert(user.clone());
                     next.run(req).await
                 }
                 Err(_) => Response::builder()
                     .status(StatusCode::UNAUTHORIZED)
                     .header(http::header::CONTENT_TYPE, "application/json")
                     .body(Body::from(json!({
-                        "message": "Invalid authentication",
-                        "error": "Invalid or expired token"
+                        "success": false,
+                        "message": "Invalid token",
                     }).to_string()))
                     .unwrap()
             }
@@ -43,8 +61,8 @@ pub async fn auth_middleware(mut req: Request, next: Next) -> Response {
             .status(StatusCode::UNAUTHORIZED)
             .header(http::header::CONTENT_TYPE, "application/json")
             .body(Body::from(json!({
-                "message": "Authentication required",
-                "error": "No token cookie found"
+                "success": false,
+                "message": "Unauthorized: No token provided",
             }).to_string()))
             .unwrap()
     }
