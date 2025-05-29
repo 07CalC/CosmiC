@@ -43,7 +43,7 @@ async fn handle_stats(mut socket: WebSocket) {
                 None
             }
         });
-        let cpu_temp = cpu_temp.unwrap_or(0.0);
+        let cpu_temp = cpu_temp.unwrap_or(-1.0);
         let load = System::load_average();
         let uptime = System::uptime();
         let stats = serde_json::json!({

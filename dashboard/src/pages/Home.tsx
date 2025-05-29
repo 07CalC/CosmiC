@@ -397,7 +397,7 @@ export const Home = () => {
                         : "text-[#1F6FEB]"
                     }`}
                   >
-                    {stats[stats.length - 1].cpuTemperature.toFixed(1)}°C
+                    {stats[stats.length - 1].cpuTemperature !==-1 ?  stats[stats.length - 1].cpuTemperature.toFixed(1): "N/A"}°C
                   </p>
                 </div>
                 <div
