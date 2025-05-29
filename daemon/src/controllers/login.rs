@@ -61,7 +61,7 @@ pub async fn login(
                 })?;
 
             let cookie = format!(
-                "token={}; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=86400",
+                "token={}; HttpOnly; SameSite=Strict; Path=/; Max-Age=86400",
                 cookie_value
             );
 
