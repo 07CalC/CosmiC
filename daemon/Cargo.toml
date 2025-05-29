@@ -27,4 +27,4 @@ tracing-subscriber = { version = "0.3.19", features = ["env-filter", "tracing-lo
 time = "0.3.41"
 jsonwebtoken = "9.3.1"
 tower-cookies = "0.11.0"
-sysinfo = "0.35.1"
+sysinfo = { version = "0.35.1", features = ["disk"] }

@@ -1,7 +1,7 @@
 use std::time::Duration;
 
 use axum::response::IntoResponse;
-use sysinfo::System;
+use sysinfo::{System, Components, Disks, Networks};
 use tokio::time::interval;
 use axum::extract::ws::{WebSocketUpgrade, WebSocket, Message};
 use chrono::Utc;
@@ -15,6 +15,19 @@ pub async fn stats_ws_handler(ws: WebSocketUpgrade) -> impl IntoResponse {
 
 async fn handle_stats(mut socket: WebSocket) {
     let mut system = System::new_all();
+    let disks = Disks::new_with_refreshed_list();
+    let disk_data = disks.iter().map(|disk| {
+        let name = disk.name().to_string_lossy().to_string();
+        let total_space = disk.total_space();
+        let available_space = disk.available_space();
+        let used_space = total_space - available_space;
+        serde_json::json!({
+            "name": name,
+            "totalSpace": total_space,
+            "availableSpace": available_space,
+            "usedSpace": used_space
+        })
+    }).collect::<Vec<_>>();
     let mut interval = interval(Duration::from_millis(2000));
 
     while let Some(_) = interval.tick().await.into() {
@@ -30,6 +43,7 @@ async fn handle_stats(mut socket: WebSocket) {
                 "total": total_memory,
                 "used": used_memory
             },
+            "disk": disk_data,
             "timestamp": Utc::now().timestamp()
         });
 
@@ -38,7 +52,7 @@ async fn handle_stats(mut socket: WebSocket) {
             .await
             .is_err()
         {
-            break; // client disconnected
+            break;
         }
     }
 }

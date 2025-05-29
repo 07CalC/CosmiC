@@ -3,12 +3,20 @@ import Loading from "../components/Loading";
 import { useGlobal } from "../context/GlobalContext";
 import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart, BarChart, Bar } from 'recharts';
 
+interface DiskInfo {
+  name: string;
+  totalSpace: number;
+  availableSpace: number;
+  usedSpace: number;
+}
+
 interface SystemStats {
   cpuUsage: number;
   memory: {
     total: number;
     used: number;
   };
+  disk: DiskInfo[];
   timestamp: number;
 }
 
@@ -17,6 +25,7 @@ export const Home = () => {
     const [loading, setLoading] = useState(true);
     const wsRef = useRef<WebSocket | null>(null);
     const [stats, setStats] = useState<SystemStats[]>([]);
+    console.log(stats)
 
     useEffect(() => {
         if (!wsRef.current) {
@@ -78,7 +87,7 @@ export const Home = () => {
     }
 
     return (
-        <div className="p-6 space-y-6">
+        <div className="min-h-screen bg-[#0D1117] p-6 space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* CPU Usage Card */}
                 <div className="bg-[#161B22] p-6 rounded-lg border border-[#30363D]">
@@ -170,6 +179,49 @@ export const Home = () => {
                             </div>
                         </div>
                     )}
+                </div>
+            </div>
+
+            {/* Disk Usage Section */}
+            <div className="bg-[#161B22] p-6 rounded-lg border border-[#30363D]">
+                <h2 className="text-[#C9D1D9] text-xl font-semibold mb-4">Disk Usage</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {stats.length > 0 && stats[stats.length - 1].disk.map((disk) => (
+                        <div key={disk.name} className="bg-[#0D1117] p-4 rounded-lg border border-[#30363D]">
+                            <div className="flex justify-between items-start mb-2">
+                                <p className="text-[#C9D1D9] font-medium">{disk.name}</p>
+                                <p className="text-[#8B949E] text-sm">
+                                    {((disk.usedSpace / disk.totalSpace) * 100).toFixed(1)}%
+                                </p>
+                            </div>
+                            
+                            <div className="w-full h-2 bg-[#30363D] rounded-full mb-3">
+                                <div 
+                                    className="h-full bg-[#1F6FEB] rounded-full"
+                                    style={{ 
+                                        width: `${(disk.usedSpace / disk.totalSpace) * 100}%`,
+                                        backgroundColor: ((disk.usedSpace / disk.totalSpace) * 100) > 90 
+                                            ? '#F85149' : '#1F6FEB'
+                                    }}
+                                />
+                            </div>
+                            
+                            <div className="grid grid-cols-2 gap-2 text-sm">
+                                <div>
+                                    <p className="text-[#8B949E]">Used</p>
+                                    <p className="text-[#C9D1D9]">{formatMemory(disk.usedSpace)}</p>
+                                </div>
+                                <div>
+                                    <p className="text-[#8B949E]">Available</p>
+                                    <p className="text-[#C9D1D9]">{formatMemory(disk.availableSpace)}</p>
+                                </div>
+                                <div className="col-span-2">
+                                    <p className="text-[#8B949E]">Total</p>
+                                    <p className="text-[#C9D1D9]">{formatMemory(disk.totalSpace)}</p>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
                 </div>
             </div>
         </div>
