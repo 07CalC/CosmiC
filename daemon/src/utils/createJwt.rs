@@ -4,10 +4,10 @@ pub fn create_jwt(user_id: &str, secret: &str) -> Result<String, jsonwebtoken::e
 
     #[derive(serde::Serialize)]
     struct Claims {
-        sub: String,     // Subject (user_id)
-        exp: i64,        // Expiration time
-        iat: i64,        // Issued at
-        iss: String,     // Issuer
+        sub: String,     
+        exp: i64,       
+        iat: i64,        
+        iss: String,     
     }
 
     let now = Utc::now();
