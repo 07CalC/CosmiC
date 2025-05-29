@@ -1,7 +1,7 @@
 use std::time::Duration;
 
 use axum::response::IntoResponse;
-use sysinfo::{System, Components, Disks, Networks};
+use sysinfo::{Components, Disks, System};
 use tokio::time::interval;
 use axum::extract::ws::{WebSocketUpgrade, WebSocket, Message};
 use chrono::Utc;
@@ -32,11 +32,20 @@ async fn handle_stats(mut socket: WebSocket) {
 
     while let Some(_) = interval.tick().await.into() {
         system.refresh_all();
-
         let cpu = system.global_cpu_usage();
         let total_memory = system.total_memory();
         let used_memory = system.used_memory();
-
+        let components =  Components::new_with_refreshed_list();
+        let cpu_temp = components.iter().find_map(|c| {
+            if c.label().contains("Core") {
+                c.temperature().map(|temp| temp as f64)
+            } else {
+                None
+            }
+        });
+        let cpu_temp = cpu_temp.unwrap_or(0.0);
+        let load = System::load_average();
+        let uptime = System::uptime();
         let stats = serde_json::json!({
             "cpuUsage": cpu,
             "memory": {
@@ -44,6 +53,13 @@ async fn handle_stats(mut socket: WebSocket) {
                 "used": used_memory
             },
             "disk": disk_data,
+            "loadAverage": {
+                "oneMinute": load.one,
+                "fiveMinutes": load.five,
+                "fifteenMinutes": load.fifteen
+            },
+            "uptime": uptime,
+            "cpuTemperature": cpu_temp,
             "timestamp": Utc::now().timestamp()
         });
 
