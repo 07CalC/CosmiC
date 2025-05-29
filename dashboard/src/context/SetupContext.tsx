@@ -5,10 +5,12 @@ import { useGlobal } from "./GlobalContext";
 
 type SetupContextType = {
   needsSetup: boolean | null;
+  setneedsSetup: React.Dispatch<React.SetStateAction<boolean | null>>;
 };
 
 const SetupContext = createContext<SetupContextType>({
   needsSetup: null,
+  setneedsSetup: () => {},
 });
 
 export const SetupProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -28,7 +30,7 @@ export const SetupProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   }, []);
 
   return (
-    <SetupContext.Provider value={{ needsSetup }}>
+    <SetupContext.Provider value={{ needsSetup, setneedsSetup }}>
       {children}
     </SetupContext.Provider>
   );

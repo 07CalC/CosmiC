@@ -9,7 +9,6 @@ import { Login } from "./pages/Login";
 import { useAuth } from "./context/authContext";
 import { ToastContainer } from "react-toastify";
 import { Layout } from "./Layout";
-import TerminalPage from "./pages/Terminal";
 
 function App() {
   

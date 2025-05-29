@@ -1,15 +1,63 @@
+import { useState } from "react";
+import { useSetup } from "../context/SetupContext";
+import { toast } from "react-toastify";
 
 
 export const Setup: React.FC = () => {
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const [formData, setFormData] = useState({
+        email: '',
+        username: '',
+        password: ''
+    });
+    const [error, setError] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const { setneedsSetup } = useSetup();
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { id, value } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [id]: value
+        }));
+    };
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        // Handle form submission
+        setIsLoading(true);
+        setError(null);
+        try {
+            const response = await fetch('/api/auth/setup', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+                credentials: 'include'
+            });
+            const data = await response.json();
+            if (!data.success) {
+                toast.error(data.error || 'Setup failed');
+                setError(data.error || 'Setup failed');
+            } else {
+                setneedsSetup(false);
+                toast.success('Admin account created successfully!');
+            }
+
+        } catch (error) {
+            console.error('Setup error:', error);
+        }
+        setIsLoading(false);
     };
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-[#0D1117]">
             <h1 className="text-2xl font-bold text-[#C9D1D9] mb-4">Setup Admin Account</h1>
+            {error && (
+                <div className="mb-4 p-3 bg-[#F85149] bg-opacity-20 border border-[#F85149] rounded-md text-white">
+                    {error}
+                </div>
+            )}
             <form 
                 onSubmit={handleSubmit}
                 className="w-full max-w-sm bg-[#161B22] p-6 rounded-lg border border-[#30363D]"
@@ -28,6 +76,7 @@ export const Setup: React.FC = () => {
                                  text-[#C9D1D9] placeholder-gray-500
                                  focus:outline-none focus:ring-2 focus:ring-[#1F6FEB] focus:border-transparent"
                         placeholder="Enter your email"
+                        onChange={handleChange}
                         required
                     />
                 </div>
@@ -45,6 +94,7 @@ export const Setup: React.FC = () => {
                                  text-[#C9D1D9] placeholder-gray-500
                                  focus:outline-none focus:ring-2 focus:ring-[#1F6FEB] focus:border-transparent"
                         placeholder="Choose a username"
+                        onChange={handleChange}
                         required
                     />
                 </div>
@@ -62,6 +112,7 @@ export const Setup: React.FC = () => {
                                  text-[#C9D1D9] placeholder-gray-500
                                  focus:outline-none focus:ring-2 focus:ring-[#1F6FEB] focus:border-transparent"
                         placeholder="Create a strong password"
+                        onChange={handleChange}
                         required
                     />
                 </div>
@@ -72,7 +123,7 @@ export const Setup: React.FC = () => {
                              focus:outline-none focus:ring-2 focus:ring-[#1F6FEB] focus:ring-offset-2 
                              focus:ring-offset-[#161B22] transition duration-200"
                 >
-                    Complete Setup
+                    {isLoading ? 'Setting up...' : 'Create Admin Account'}
                 </button>
             </form>
             <p className="mt-4 text-sm text-[#C9D1D9]">

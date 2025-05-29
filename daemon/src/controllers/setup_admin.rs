@@ -1,9 +1,5 @@
 use crate::{extra::hash_password::hash_password, state::AppState};
-use axum::{
-    Json,
-    extract::State,
-    response::{IntoResponse},
-};
+use axum::{Json, extract::State, response::IntoResponse};
 use serde::Deserialize;
 use serde_json::json;
 use sqlx::{query, query_scalar};
@@ -27,8 +23,8 @@ pub async fn setup_admin(
             (
                 axum::http::StatusCode::INTERNAL_SERVER_ERROR,
                 Json(json!({
-                    "message": "internal server error",
-                    "error": "DB error"
+                    "success": false,
+                    "error": "failed to check existing users"
                 })),
             )
         })?;
@@ -37,17 +33,42 @@ pub async fn setup_admin(
         return Err((
             axum::http::StatusCode::BAD_REQUEST,
             Json(json!({
-                "message": "one or more admin already exists",
-                "error": "admin already exists, login to add more admins"
+                "success": false,
+                "error": "admin user already exists"
             })),
         ));
     }
+
     if payload.username.is_empty() || payload.email.is_empty() || payload.password.is_empty() {
         return Err((
             axum::http::StatusCode::BAD_REQUEST,
             Json(json!({
                 "message": "required fields missing",
                 "error": "required fields missing"
+            })),
+        ));
+    }
+
+    let username_exists: i64 = query_scalar("SELECT COUNT(*) FROM users WHERE username = ?")
+        .bind(&payload.username)
+        .fetch_one(&state.db)
+        .await
+        .map_err(|_| {
+            (
+                axum::http::StatusCode::INTERNAL_SERVER_ERROR,
+                Json(json!({
+                    "success": false,
+                    "error": "failed to check username"
+                })),
+            )
+        })?;
+
+    if username_exists > 0 {
+        return Err((
+            axum::http::StatusCode::BAD_REQUEST,
+            Json(json!({
+                "success": false,
+                "error": "username already taken"
             })),
         ));
     }
@@ -69,5 +90,5 @@ pub async fn setup_admin(
 .execute(&state.db)
 .await;
 
-    Ok(Json(json!({"message": "Admin setup completed"})))
+    Ok(Json(json!({"success": true, "message": "Admin setup completed"})))
 }
