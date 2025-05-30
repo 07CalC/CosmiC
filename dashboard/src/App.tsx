@@ -1,7 +1,12 @@
-import { Navigate, Route, BrowserRouter as Router, Routes } from "react-router-dom"
-import './global.css'
-import { useGlobal } from "./context/GlobalContext"
-import { Home } from "./pages/Home"
+import {
+  Navigate,
+  Route,
+  BrowserRouter as Router,
+  Routes,
+} from "react-router-dom";
+import "./global.css";
+import { useGlobal } from "./context/GlobalContext";
+import { Home } from "./pages/Home";
 import { useSetup } from "./context/SetupContext";
 import Loading from "./components/Loading";
 import { Setup } from "./pages/Setup";
@@ -14,19 +19,17 @@ import { ProjectsPage } from "./pages/Projects";
 import { ProjectPage } from "./pages/Project";
 
 function App() {
-  
   const { needsSetup } = useSetup();
   const { globalLoading: loading } = useGlobal();
   const { user } = useAuth();
   if (loading) {
-    return <Loading />
+    return <Loading />;
   }
 
   return (
-    
     <Router>
       <Routes>
-      {needsSetup && (
+        {needsSetup && (
           <>
             <Route path="/setup" element={<Setup />} />
             <Route path="*" element={<Navigate to="/setup" />} />
@@ -55,16 +58,12 @@ function App() {
           </Route>
         )}
       </Routes>
-      <ToastContainer 
-      autoClose={500}
-      />
+      <ToastContainer autoClose={500} hideProgressBar />
     </Router>
-  )
+  );
 }
 
-export default App
-
-
+export default App;
 
 // "background": "#0D1117",
 //     "foreground": "#C9D1D9",

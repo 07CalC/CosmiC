@@ -1,14 +1,15 @@
 
 CREATE TABLE IF NOT EXISTS apps (
     id TEXT PRIMARY KEY,
-    project_id TEXT NOT NULL,
+    project_id TEXT,
     name TEXT NOT NULL,
-    repo_url TEXT NOT NULL,
-    branch TEXT NOT NULL,
+    repo_url TEXT,
+    branch TEXT,
+    tags TEXT,
     created_by_id TEXT NOT NULL,
     app_type TEXT NOT NULL,
     docker_file_path TEXT,
-    env_vars TEXT, -- JSON string of environment variables
+    env_vars TEXT,
     build_command TEXT,
     run_command TEXT,
     domain TEXT,
