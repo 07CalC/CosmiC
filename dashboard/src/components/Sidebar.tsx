@@ -58,8 +58,12 @@ export const Sidebar = () => {
         ))}
       </nav>
       <div className="absolute bottom-0 left-0 w-full justify-between p-4 flex gap-x-5 border-t items-center border-[#30363D]">
-          <FaUser className="text-2xl text-[#C9D1D9]" />
+        <div className="flex items-center gap-x-2">
+          <span className="w-8 h-8 rounded-full text-white bg-[#30363D] flex items-center justify-center">
+            {user?.username[0].toUpperCase() || 'C'}
+          </span>
           <span className="text-[#C9D1D9] text-2xl">{user?.username || 'Guest'}</span>
+          </div>
           <MdOutlineLogout
             className="text-2xl right-0 text-[#C9D1D9] cursor-pointer hover:text-red-500"
             onClick={logout}

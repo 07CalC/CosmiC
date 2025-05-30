@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import Loading from "../components/Loading";
 import { useAuth } from "../context/authContext";
 import { FiEdit2, FiTrash2 } from 'react-icons/fi';
+import { EditProjectModal } from '../components/EditProjectModal';
 
 interface User {
     id: string;
@@ -50,6 +51,7 @@ export const ProjectPage = () => {
     const [error, setError] = useState<string | null>(null);
     const [project, setProject] = useState<Project | null>(null);
     const [apps, setApps] = useState<App[]>([]);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
     const fetchProjectDetails = async () => {
         try {
@@ -102,6 +104,32 @@ export const ProjectPage = () => {
         }
     };
 
+    const handleEdit = async (projectData: { name: string; description: string; tags: string[] }) => {
+        try {
+            const response = await fetch(`/api/projects/${project?.id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
+                body: JSON.stringify(projectData),
+            });
+
+            const data = await response.json();
+
+            if (!data.success) {
+                toast.error(data.error || 'Failed to update project');
+                throw new Error(data.error || 'Failed to update project');
+            }
+
+            toast.success(data.message || 'Project updated successfully');
+            fetchProjectDetails();
+            setIsEditModalOpen(false);
+        } catch (err) {
+            toast.error(err instanceof Error ? err.message : 'Failed to update project');
+        }
+    };
+
     useEffect(() => {
         fetchProjectDetails();
     }, [params.projectId]);
@@ -149,7 +177,7 @@ export const ProjectPage = () => {
                 {user?.isAdmin && (
                     <div className="flex items-center gap-2">
                         <button 
-                            onClick={() => navigate(`/projects/${project?.id}/edit`)}
+                            onClick={() => setIsEditModalOpen(true)}
                             className="px-3 py-2 bg-[#21262D] text-[#C9D1D9] rounded-lg hover:bg-[#30363D] transition-colors inline-flex items-center gap-2"
                         >
                             <FiEdit2 className="w-4 h-4" />
@@ -222,6 +250,15 @@ export const ProjectPage = () => {
                     </div>
                 )}
             </div>
+
+            {project && (
+                <EditProjectModal
+                    isOpen={isEditModalOpen}
+                    onClose={() => setIsEditModalOpen(false)}
+                    onSubmit={handleEdit}
+                    project={project}
+                />
+            )}
         </div>
     );
 };
