@@ -10,6 +10,8 @@ import { useAuth } from "./context/authContext";
 import { ToastContainer } from "react-toastify";
 import { Layout } from "./Layout";
 import { UsersPage } from "./pages/Users";
+import { ProjectsPage } from "./pages/Projects";
+import { ProjectPage } from "./pages/Project";
 
 function App() {
   
@@ -39,7 +41,8 @@ function App() {
         {!needsSetup && user && (
           <Route element={<Layout />}>
             <Route path="/" element={<Home />} />
-            <Route path="/projects" element={<div>Projects Page</div>} />
+            <Route path="/projects" element={<ProjectsPage />} />
+            <Route path="/projects/:projectId" element={<ProjectPage />} />
             <Route path="/databases" element={<div>Databases Page</div>} />
             <Route path="/settings" element={<div>Settings Page</div>} />
             <Route path="/deployments" element={<div>Deployments Page</div>} />

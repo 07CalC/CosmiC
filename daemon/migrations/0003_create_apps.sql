@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS apps (
     env_vars TEXT, -- JSON string of environment variables
     build_command TEXT,
     run_command TEXT,
+    domain TEXT,
     port INTEGER,
     auto_deploy INTEGER NOT NULL DEFAULT 1,
     created_at TEXT NOT NULL,

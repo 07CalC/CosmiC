@@ -52,6 +52,7 @@ pub struct App {
     pub env_vars: Option<HashMap<String, String>>,
     pub build_command: Option<String>,
     pub run_command: Option<String>,
+    pub domain: Option<String>,
     pub port: Option<u16>,
     pub auto_deploy: bool,
     pub created_at: DateTime<Utc>,

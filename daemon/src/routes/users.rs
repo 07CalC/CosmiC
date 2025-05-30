@@ -1,4 +1,4 @@
-use axum::{extract::State, middleware, routing::{get, post}, Router};
+use axum::{middleware, routing::{get, post}, Router};
 
 use crate::{controllers::users::{create_user::create_user, get_users::get_users}, middlewares::auth_middleware::auth_middleware, state::AppState};
 

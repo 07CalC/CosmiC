@@ -1,5 +1,5 @@
 use axum::{Router, routing::get};
-use routes::{auth::auth_routes, users::users_routes, ws::ws_routes};
+use routes::{auth::auth_routes, project::projects_router, users::users_routes, ws::ws_routes};
 use state::AppState;
 use std::net::SocketAddr;
 use tower_http::{cors::{Any, CorsLayer}, services::ServeDir};
@@ -38,6 +38,7 @@ async fn main() {
         .nest("/api/auth", auth_routes(state.clone()))
         .nest("/api/ws", ws_routes(state.clone()))
         .nest("/api/users", users_routes(state.clone()))
+        .nest("/api/projects", projects_router(state.clone()))
         .with_state(state)
         .layer(cors_layer);
 
