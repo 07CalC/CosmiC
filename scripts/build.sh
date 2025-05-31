@@ -1,11 +1,12 @@
 #!/bin/bash
 set -e
 
-# Build React frontend
+#frontend
 cd dashboard
 bun install
 bun run build
 
+#backend
 cd ../daemon
 cargo build --release
 

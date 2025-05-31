@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS apps (
     app_type TEXT NOT NULL,
     docker_file_path TEXT,
     docker_image TEXT,
-    env_vars TEXT CHECK(json_valid(env_vars)),
+    env_vars TEXT,
     build_command TEXT,
     run_command TEXT,
     domain TEXT UNIQUE,

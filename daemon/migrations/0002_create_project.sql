@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS projects (
     id TEXT PRIMARY KEY,
     name TEXT NOT NULL,
     description TEXT,
-    tags TEXT CHECK(json_valid(tags)),
+    tags TEXT,
     last_deployment_at TEXT DEFAULT NULL,
     owner_id TEXT NOT NULL,
     created_at TEXT NOT NULL DEFAULT (datetime('now')),
