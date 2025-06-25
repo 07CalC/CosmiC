@@ -1,8 +1,12 @@
-use axum::{extract::State, response::{IntoResponse, Response}, Extension, Json};
+use axum::{
+    Extension, Json,
+    extract::State,
+    response::{IntoResponse, Response},
+};
 use hyper::StatusCode;
 use serde::Deserialize;
 use serde_json::json;
-use sqlx::{query, query_scalar};
+use sqlx::{Row, query, query_scalar};
 
 use crate::{extra::hash_password::hash_password, state::AppState, utils::types::User};
 
@@ -94,5 +98,41 @@ pub async fn create_user(
     Ok(Json(json!({
         "success": true,
         "message": "user created successfully",
-    })).into_response())
+    }))
+    .into_response())
+}
+
+#[axum::debug_handler]
+pub async fn get_users(
+    State(state): State<AppState>,
+) -> Result<Response, (StatusCode, Json<serde_json::Value>)> {
+    let users = query("SELECT id, username, email, is_admin, role FROM users")
+        .fetch_all(&state.db)
+        .await
+        .map_err(|_| {
+            (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                Json(json!({"success": false, "error": "failed to fetch users"})),
+            )
+        })?;
+
+    let users: Vec<User> = users
+        .into_iter()
+        .map(|row| User {
+            id: row.get("id"),
+            username: row.get("username"),
+            email: row.get("email"),
+            is_admin: row.get("is_admin"),
+            role: row.get("role"),
+            password_hash: None,
+            created_at: None,
+            updated_at: None,
+        })
+        .collect();
+
+    Ok(Json(json!({
+        "success": true,
+        "users": users
+    }))
+    .into_response())
 }
